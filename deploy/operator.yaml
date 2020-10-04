@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: k8-test-operator
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      name: k8-test-operator
+  template:
+    metadata:
+      labels:
+        name: k8-test-operator
+    spec:
+      serviceAccountName: k8-test-operator
+      containers:
+        - name: k8-test-operator
+          # Replace this with the built image name
+          image: REPLACE_IMAGE
+          command:
+          - k8-test-operator
+          imagePullPolicy: Always
+          env:
+            - name: WATCH_NAMESPACE
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.namespace
+            - name: POD_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+            - name: OPERATOR_NAME
+              value: "k8-test-operator"
